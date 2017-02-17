@@ -1,3 +1,5 @@
+/* easy program to implement montecarlo method to estimate the value of pi */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
