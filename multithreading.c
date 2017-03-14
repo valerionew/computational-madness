@@ -1,11 +1,9 @@
 /*  based on the work of https://randu.org/tutorials/threads/  */
 /* pthread implementation of montecarlo method to calculate pi */
-/*                 for windows, non portable                   */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>
-#include <windows.h>
 
 #define NUM_THREADS 8 // number of threads running
 #define THREAD_POINTS 12500000 // points per thread
@@ -19,11 +17,12 @@ typedef struct _thread_data_t {
   int belongs; // stores here the number of points that belong the circle
 } thread_data_t;
 
+
 // thread function
 void *thr_func(void *arg) {
   thread_data_t *data = (thread_data_t *)arg;
 
-  // making sure that every thread gets a different set of ra
+ // making sure that every thread gets a different set of random numbers
   srand(time(NULL)*data->tid);
 
   printf("Thread %d is running\n", data->tid); // just to say hi
@@ -62,7 +61,7 @@ int main(int argc, char **argv) {
   pthread_t thr[NUM_THREADS];
   int i, rc;
 
-  // for calculating the computational time
+  // to calculate the computational time
   clock_t time = clock();
 
   // creating the array of thr_data that will be passed to threads
@@ -82,10 +81,11 @@ int main(int argc, char **argv) {
     printf("%u\n",thr_data[i].belongs);
   }
 
-  // calculating  and printing the computational time
+  // calculating and printing the computational time
   time = clock() - time;
-  printf("Total CPU time: %lf seconds\n", (double)time/(CLOCKS_PER_SEC));
-  Beep(3000,500);
+  //CPU time in linux, clock time in windows
+  //To get the clock time in linux divide time by CLOCKS_PER_SEC*NUM_THREADS
+  printf("Total CPU time: %lf seconds\n\a", (double)time/(CLOCKS_PER_SEC));
 
   return 0;
 }
