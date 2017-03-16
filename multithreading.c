@@ -33,7 +33,7 @@ void *thr_func(void *arg) {
 
   double x,y,x1,x2,y1,y2;
   unsigned int executed=0; // stores the number of executed points
-  data->belongs=0; //initalizes to 0 the counter of matched points
+  int count = 0;
 
   // go through each point
   for(executed;executed<THREAD_POINTS;executed++){
@@ -50,11 +50,12 @@ void *thr_func(void *arg) {
 
     //chech if it belongs to the circle or not
     if(x*x+y*y<1){
-      data->belongs++;
+      ++count;
     }
   }
 
   data->reentrantSeed = seed;
+  data->belongs = count; //initalizes to 0 the counter of matched points
   // say goodbye. the datas are stored in the thr_data array
   pthread_exit(NULL);
 }
