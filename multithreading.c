@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
   time = clock() - time;
   //CPU time in linux, clock time in windows
   //To get the clock time in linux divide time by CLOCKS_PER_SEC*NUM_THREADS
-  printf("Total CPU time: %lf seconds\n\a", (double)time/(CLOCKS_PER_SEC*NUM_THREADS),(piPoints*4));
+  printf("Total CPU time: %lf seconds\n\a", (double)time/(CLOCKS_PER_SEC),(piPoints*4));
 
   return 0;
 }
