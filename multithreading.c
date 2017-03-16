@@ -25,35 +25,38 @@ void *thr_func(void *arg) {
   thread_data_t *data = (thread_data_t *)arg;
 
  // making sure that every thread gets a different set of random numbers
-  data->reentrantSeed=time(NULL)+data->tid;
+  int seed = time(NULL) + (1 + data->tid);
 
   printf("Thread %d is running\n", data->tid); // just to say hi
   static const unsigned long int randmax_big=(((RAND_MAX+1.0)*(RAND_MAX+1.0))-1.0);
-  
+  double const irandmax_big = 1. / randmax_big;
+
 
   double x,y,x1,x2,y1,y2;
   unsigned int executed=0; // stores the number of executed points
-  data->belongs=0; //initalizes to 0 the counter of matched points
+  int count = 0;
 
   // go through each point
   for(executed;executed<THREAD_POINTS;executed++){
-    x1=rand_r(&data->reentrantSeed);
-    x2=rand_r(&data->reentrantSeed);
-    y1=rand_r(&data->reentrantSeed);
-    y2=rand_r(&data->reentrantSeed);
+    x1=rand_r(&seed);
+    x2=rand_r(&seed);
+    y1=rand_r(&seed);
+    y2=rand_r(&seed);
 
     //the enhanced random formula
     x=x1*RAND_MAX_P1+x2;
-    x=x/randmax_big;
+    x = x * irandmax_big;
     y=y1*RAND_MAX_P1+y2;
-    y=y/randmax_big;
+    y = y * irandmax_big;
 
     //chech if it belongs to the circle or not
     if(x*x+y*y<1){
-      data->belongs++;
+      ++count;
     }
   }
 
+  data->reentrantSeed = seed;
+  data->belongs = count; //initalizes to 0 the counter of matched points
   // say goodbye. the datas are stored in the thr_data array
   pthread_exit(NULL);
 }
