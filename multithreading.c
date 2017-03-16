@@ -6,7 +6,8 @@
 #include <pthread.h>
 
 #define NUM_THREADS 8 // number of threads running
-#define THREAD_POINTS 12500000 // points per thread
+#define THREAD_POINTS 12500000L // points per thread
+
 #define RAND_MAX_EN (((RAND_MAX+1.0)*(RAND_MAX+1.0))-1.0)
 #define RAND_MAX_P1 RAND_MAX+1.0
 
@@ -15,6 +16,7 @@
 typedef struct _thread_data_t {
   int tid; // thread id given by the order of creation
   int belongs; // stores here the number of points that belong the circle
+  unsigned int reentrantSeed; //seed for the reentrant random function rand_r()
 } thread_data_t;
 
 
@@ -23,26 +25,28 @@ void *thr_func(void *arg) {
   thread_data_t *data = (thread_data_t *)arg;
 
  // making sure that every thread gets a different set of random numbers
-  srand(time(NULL)*data->tid);
+  data->reentrantSeed=time(NULL)+data->tid;
 
   printf("Thread %d is running\n", data->tid); // just to say hi
-  static const unsigned long int randmaxen=(((RAND_MAX+1.0)*(RAND_MAX+1.0))-1.0);
+  static const unsigned long int randmax_big=(((RAND_MAX+1.0)*(RAND_MAX+1.0))-1.0);
+  
+
   double x,y,x1,x2,y1,y2;
   unsigned int executed=0; // stores the number of executed points
   data->belongs=0; //initalizes to 0 the counter of matched points
 
   // go through each point
   for(executed;executed<THREAD_POINTS;executed++){
-    x1=rand();
-    x2=rand();
-    y1=rand();
-    y2=rand();
+    x1=rand_r(&data->reentrantSeed);
+    x2=rand_r(&data->reentrantSeed);
+    y1=rand_r(&data->reentrantSeed);
+    y2=rand_r(&data->reentrantSeed);
 
     //the enhanced random formula
     x=x1*RAND_MAX_P1+x2;
-    x=x/randmaxen;
+    x=x/randmax_big;
     y=y1*RAND_MAX_P1+y2;
-    y=y/randmaxen;
+    y=y/randmax_big;
 
     //chech if it belongs to the circle or not
     if(x*x+y*y<1){
@@ -61,6 +65,8 @@ int main(int argc, char **argv) {
   pthread_t thr[NUM_THREADS];
   int i, rc;
 
+  unsigned long long int piPoints=0; //store the sum of all belonging points
+
   // to calculate the computational time
   clock_t time = clock();
 
@@ -78,6 +84,7 @@ int main(int argc, char **argv) {
   // wait each thread to be over and print the number of matching points for each thread
   for (i = 0; i < NUM_THREADS; ++i) {
     pthread_join(thr[i], NULL);
+    piPoints=thr_data[i].belongs+piPoints;
     printf("%u\n",thr_data[i].belongs);
   }
 
@@ -85,7 +92,7 @@ int main(int argc, char **argv) {
   time = clock() - time;
   //CPU time in linux, clock time in windows
   //To get the clock time in linux divide time by CLOCKS_PER_SEC*NUM_THREADS
-  printf("Total CPU time: %lf seconds\n\a", (double)time/(CLOCKS_PER_SEC));
+  printf("Total CPU time: %lf seconds\n\a", (double)time/(CLOCKS_PER_SEC*NUM_THREADS),(piPoints*4));
 
   return 0;
 }
