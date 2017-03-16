@@ -29,6 +29,7 @@ void *thr_func(void *arg) {
 
   printf("Thread %d is running\n", data->tid); // just to say hi
   static const unsigned long int randmax_big=(((RAND_MAX+1.0)*(RAND_MAX+1.0))-1.0);
+  double const irandmax_big = 1. / randmax_big;
 
 
   double x,y,x1,x2,y1,y2;
@@ -44,9 +45,9 @@ void *thr_func(void *arg) {
 
     //the enhanced random formula
     x=x1*RAND_MAX_P1+x2;
-    x=x/randmax_big;
+    x=x * randmax_big;
     y=y1*RAND_MAX_P1+y2;
-    y=y/randmax_big;
+    y=y * randmax_big;
 
     //chech if it belongs to the circle or not
     if(x*x+y*y<1){
