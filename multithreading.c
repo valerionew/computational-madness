@@ -29,7 +29,7 @@ void *thr_func(void *arg) {
 
   printf("Thread %d is running\n", data->tid); // just to say hi
   static const unsigned long int randmax_big=(((RAND_MAX+1.0)*(RAND_MAX+1.0))-1.0);
-  
+
 
   double x,y,x1,x2,y1,y2;
   unsigned int executed=0; // stores the number of executed points
