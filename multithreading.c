@@ -25,7 +25,7 @@ void *thr_func(void *arg) {
   thread_data_t *data = (thread_data_t *)arg;
 
  // making sure that every thread gets a different set of random numbers
-  data->reentrantSeed=time(NULL)+data->tid;
+  int seed = time(NULL)+data->tid;
 
   printf("Thread %d is running\n", data->tid); // just to say hi
   static const unsigned long int randmax_big=(((RAND_MAX+1.0)*(RAND_MAX+1.0))-1.0);
@@ -37,10 +37,10 @@ void *thr_func(void *arg) {
 
   // go through each point
   for(executed;executed<THREAD_POINTS;executed++){
-    x1=rand_r(&data->reentrantSeed);
-    x2=rand_r(&data->reentrantSeed);
-    y1=rand_r(&data->reentrantSeed);
-    y2=rand_r(&data->reentrantSeed);
+    x1=rand_r(&seed);
+    x2=rand_r(&seed);
+    y1=rand_r(&seed);
+    y2=rand_r(&seed);
 
     //the enhanced random formula
     x=x1*RAND_MAX_P1+x2;
@@ -54,6 +54,7 @@ void *thr_func(void *arg) {
     }
   }
 
+  data->reentrantSeed = seed;
   // say goodbye. the datas are stored in the thr_data array
   pthread_exit(NULL);
 }
