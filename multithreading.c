@@ -45,9 +45,9 @@ void *thr_func(void *arg) {
 
     //the enhanced random formula
     x=x1*RAND_MAX_P1+x2;
-    x=x * randmax_big;
+    x = x * irandmax_big;
     y=y1*RAND_MAX_P1+y2;
-    y=y * randmax_big;
+    y = y * irandmax_big;
 
     //chech if it belongs to the circle or not
     if(x*x+y*y<1){
