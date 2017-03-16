@@ -25,7 +25,7 @@ void *thr_func(void *arg) {
   thread_data_t *data = (thread_data_t *)arg;
 
  // making sure that every thread gets a different set of random numbers
-  int seed = time(NULL)+data->tid;
+  int seed = time(NULL) + (1 + data->tid);
 
   printf("Thread %d is running\n", data->tid); // just to say hi
   static const unsigned long int randmax_big=(((RAND_MAX+1.0)*(RAND_MAX+1.0))-1.0);
