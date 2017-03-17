@@ -94,6 +94,6 @@ int main(int argc, char **argv) {
   //CPU time in linux, clock time in windows
   //To get the clock time in linux divide time by CLOCKS_PER_SEC*NUM_THREADS
   printf("Total CPU time: %lf seconds\n%llu\a", (double)time/(CLOCKS_PER_SEC*NUM_THREADS),(piPoints*4));
-getchar();
+
   return 0;
 }
