@@ -6,7 +6,7 @@
 #include <pthread.h>
 
 #define NUM_THREADS 8 // number of threads running
-#define THREAD_POINTS 12500000L // points per thread
+#define THREAD_POINTS 1250000000L // points per thread
 
 #define RAND_MAX_EN (((RAND_MAX+1.0)*(RAND_MAX+1.0))-1.0)
 #define RAND_MAX_P1 RAND_MAX+1.0
@@ -16,7 +16,6 @@
 typedef struct _thread_data_t {
   int tid; // thread id given by the order of creation
   int belongs; // stores here the number of points that belong the circle
-  unsigned int reentrantSeed; //seed for the reentrant random function rand_r()
 } thread_data_t;
 
 
@@ -55,7 +54,6 @@ void *thr_func(void *arg) {
     }
   }
 
-  data->reentrantSeed = seed;
   data->belongs = count; //initalizes to 0 the counter of matched points
   // say goodbye. the datas are stored in the thr_data array
   pthread_exit(NULL);
@@ -95,7 +93,7 @@ int main(int argc, char **argv) {
   time = clock() - time;
   //CPU time in linux, clock time in windows
   //To get the clock time in linux divide time by CLOCKS_PER_SEC*NUM_THREADS
-  printf("Total CPU time: %lf seconds\n\a", (double)time/(CLOCKS_PER_SEC),(piPoints*4));
-
+  printf("Total CPU time: %lf seconds\n%llu\a", (double)time/(CLOCKS_PER_SEC*NUM_THREADS),(piPoints*4));
+getchar();
   return 0;
 }
